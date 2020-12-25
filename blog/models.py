@@ -30,7 +30,7 @@ class Post(models.Model):
     )
 
     def get_absolute_url(self):
-        return reverse('tag_detail_url', kwargs={'slug': self.slug})
+        return reverse('post_detail_url', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.title
