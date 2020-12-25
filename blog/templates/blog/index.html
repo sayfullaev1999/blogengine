@@ -6,9 +6,16 @@
 
 {% block content %}
     <h1 class="mb-5">Посты</h1>
-    {% for name in names %}
-        <p>
-            {{ name }}
-        </p>
+    {% for post in posts %}
+        <div class="card mb-4">
+            <div class="card-header">
+                {{ post.date_pub }}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.body|truncatewords:15 }}</p>
+                <a href="{{ post.get_absolute_url }}" class="btn btn-light">Read</a>
+            </div>
+        </div>
     {% endfor %}
 {% endblock %}
