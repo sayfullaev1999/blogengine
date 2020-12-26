@@ -52,6 +52,32 @@
             {% block content %}
                 Для вас нет никакого контента
             {% endblock %}
+            {% if is_paginated %}
+                <nav aria-label="...">
+                    <ul class="pagination">
+                        <li class="page-item {% if not previous_url %} disabled {% endif %}">
+                            <a class="page-link" href="{{ previous_url }}" tabindex="-1" aria-disabled="true">Previous</a>
+                        </li>
+
+                        {% for n in page_object.paginator.page_range %}
+                            {% if page_object.number == n %}
+                                <li class="page-item active" aria-current="page">
+                                    <a class="page-link" href="?page={{ n }}">{{ n }}</a>
+                                </li>
+                            {% elif n > page_object.number|add:-2 and n < page_object.number|add:2 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ n }}">{{ n }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        <li class="page-item {% if not next_url %} disabled {% endif %}">
+                            <a class="page-link" href="{{ next_url }}">Next</a>
+                        </li>
+
+                    </ul>
+                </nav>
+            {% endif %}
         </div>
     </div>
 </div>

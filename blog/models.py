@@ -55,6 +55,7 @@ class Post(models.Model):
         super(Post, self).save(*args, **kwargs)
 
     class Meta:
+        ordering = ['-date_pub']
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
 
@@ -84,5 +85,6 @@ class Tag(models.Model):
         return self.title
 
     class Meta:
+        ordering = ['title']
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
