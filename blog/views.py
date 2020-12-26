@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,9 +9,8 @@ from .models import Post, Tag
 from .utils import ObjectDetailMixin, ObjectCreateMixin, ObjectUpdateMixin, ObjectDeleteMixin
 
 
-def posts_list(request):
-    posts = Post.objects.all()
-    paginator = Paginator(posts, 2)
+def objects_get_paginator(request, objects):
+    paginator = Paginator(objects, 2)
     page_number = request.GET.get('page', 1)
     page = paginator.get_page(page_number)
     is_paginated = page.has_other_pages()
@@ -25,6 +25,16 @@ def posts_list(request):
         'next_url': next_url,
         'previous_url': previous_url,
     }
+    return context
+
+
+def posts_list(request):
+    search_query = request.GET.get('search', '')
+    if search_query:
+        posts = Post.objects.filter(Q(title__icontains=search_query) | Q(body__icontains=search_query))
+    else:
+        posts = Post.objects.all()
+    context = objects_get_paginator(request, posts)
     return render(request, 'blog/posts_list.html', context=context)
 
 
