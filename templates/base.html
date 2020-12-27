@@ -12,7 +12,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
             crossorigin="anonymous"></script>
-
+    <style type="text/css">
+        .asteriskField {
+            display: none;
+        }
+        form .alert ul li {
+            list-style: none;
+        }
+    </style>
     <title>
         {% block title %}
             Blog Engine
@@ -22,11 +29,6 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
@@ -37,11 +39,28 @@
                 </li>
             </ul>
 
-            <form class="d-flex" action="{% url 'posts_list_url' %}">
+            <form class="d-flex">
                 <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="search" name="search">
                 <button class="btn btn-outline-success" type="submit">Поиск</button>
-            </form>
+                <div class="btn-group dropdown-menu-right">
+                    {% if user.is_authenticated %}
+                        <button type="button" class="btn btn-red dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            {{ user.username }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="nav-link" href="{% url 'password_change' %}">Изменить пароль</a></li>
+                            <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="nav-link" href="{% url 'logout' %}">Выход</a></li>
+                        </ul>
 
+                    {% else %}
+                        <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'signup_url' %}">Регистрация</a>
+                    {% endif %}
+                </div>
+            </form>
         </div>
     </div>
 </nav>
@@ -55,7 +74,8 @@
                 <nav aria-label="...">
                     <ul class="pagination">
                         <li class="page-item {% if not previous_url %} disabled {% endif %}">
-                            <a class="page-link" href="{{ previous_url }}" tabindex="-1" aria-disabled="true">Previous</a>
+                            <a class="page-link" href="{{ previous_url }}" tabindex="-1"
+                               aria-disabled="true">Previous</a>
                         </li>
 
                         {% for n in page_object.paginator.page_range %}
